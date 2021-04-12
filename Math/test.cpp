@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+	cout << (int) 10e8 + 7;
 
 }
 

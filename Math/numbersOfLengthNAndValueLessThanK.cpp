@@ -1,5 +1,4 @@
-
-long long int Solution::solve(vector < int > & A, int B, int C) {
+int Solution::solve(vector < int > & A, int B, int C) {
 
 	if (!C || !A.size())
 		return 0;

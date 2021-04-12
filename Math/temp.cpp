@@ -43,13 +43,14 @@ int Solution::solve(vector<  int> &A,   int B,   int C) {
 
 		long long int num = C % 10;
 
+		long long int Lb = *lower_bound(A.begin(), A.end(), num);
 		long long int indexLb = lower_bound(A.begin(), A.end(), num) - A.begin();
 
 		if (currDigit == B && flag)
 			indexLb--;
 		ans += indexLb * pow(A.size(), currDigit - 1);
 
-		if (s[B - currDigit] != num)
+		if (Lb != num)
 			return ans;
 
 		C /= 10;

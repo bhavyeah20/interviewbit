@@ -24,5 +24,6 @@ int Solution::gcd(int A, int B) {
 	// if(n == 0)
 	// 	return m;
 
+	//Euclids algo
 	// return gcd(m % n, n);
 }
