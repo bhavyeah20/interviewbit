@@ -1,40 +1,37 @@
-#include<bits/stdc++.h>
-using namespace std;
-
 #define MOD 1000003
+#define ll long long
 
-
-long long int factorial(int n)
+ll factorial(ll n)
 {
 	if (n == 0 || n == 1)
 		return 1;
 
-	long long int  dp[n + 1];
+	ll dp[n + 1];
 	dp[0] = dp[1] = 1;
 
-	for (int i = 2; i <= n; i++)
+	for (ll i = 2; i <= n; i++)
 		dp[i] = ((i % MOD) * (dp[i - 1] % MOD)) % MOD;
 
 	return dp[n];
 }
 
-long long modPow (long long a, long long n) {
+ll powerr(ll a, ll b)
+{
 
-	long long ans = 1;
+	ll res = 1;
+	while (b)
+	{
+		if (b & 1)
+			res = ((res % MOD) * (a % MOD)) % MOD;
 
-	while (n > 0) {
-
-		if (n & 1)
-			ans = (ans * a) % MOD;
-
-		a = (a * a) % MOD;
-		n >>= 1;
+		a = ((a % MOD) * (a % MOD)) % MOD;
+		b >>= 1;
 	}
-
-	return ans;
+	return res;
 }
 
-int findRank(string A) {
+
+int Solution::findRank(string A) {
 
 	vector<int> presentCount(256, 0);
 	unordered_map<int, int>  mp;
@@ -52,7 +49,7 @@ int findRank(string A) {
 
 
 
-	long long int ans = 0;
+	ll ans = 0;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -67,20 +64,19 @@ int findRank(string A) {
 				// cout << "For char " << j << "present count was " << presentCount[j] << endl;
 				presentCount[j]--;
 
-				long long int denom = 1;
+				ll denom = 1;
 				for (auto it : mp)
 				{
 					if (it.first == j)
 						continue;
 
-					denom = (denom * factorial(it.second)) % MOD;
+					denom = ((denom % MOD) * (powerr(factorial(it.second), MOD - 2) % MOD)) % MOD;
+
 				}
+				denom = ((denom % MOD) * (powerr(factorial(presentCount[j]), MOD - 2) % MOD)) % MOD;
 
-				denom = (denom * factorial(presentCount[j])) % MOD;
 
-				// cout << denom << " ";
-				// denom = modPow(denom, MOD - 2);
-				ans += ((factorial(n - i - 1) % MOD) * (denom % MOD)) % MOD;
+				ans = ans % MOD + ((factorial(n - i - 1) % MOD) * (denom % MOD)) % MOD;
 				// cout << endl;
 				// cout << ans << " ";
 				presentCount[j]++;
@@ -95,10 +91,4 @@ int findRank(string A) {
 
 
 	return (ans + 1) % MOD;
-}
-
-int main()
-{
-	string s = "cdaabcd";
-	cout << findRank(s);
 }
