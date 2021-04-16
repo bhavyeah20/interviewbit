@@ -6,12 +6,22 @@ using namespace std;
 
 int main()
 {
-	vector<int > arr1({1, 2, 4});
-	vector<int > arr2({11, 22, 43});
-	vector<vector<int> > arr({arr1, arr2});
-	for (int x : arr.back())
+	vector<int > A({1, 1, 1, 2, 3, 3, 3, 4, 4, 4, 4});
+
+	int cnt = 0;
+	int n = A.size();
+	for (int i = 0; i < n; i++)
+	{
+		if (i < n - 1 && A[i] == A[i + 1] && A[i] == A[i + 2])
+			continue;
+		else {
+			A[cnt] = A[i];
+			cnt++;
+		}
+	}
+
+	for (int x : A)
 		cout << x << " ";
+	cout << endl << cnt;
+
 }
-
-
-

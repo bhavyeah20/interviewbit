@@ -13,21 +13,31 @@ vector<vector<int> > Solution::threeSum(vector<int> &A) {
 
 		int i = j + 1, k = n - 1;
 
-		int target = -1 * A[j];
+		// long long int target = -1;
+		// target *= A[j];
+		long long int target = (long long) - 1 * (long long)A[j];
 		while (i < k)
 		{
-			if (A[i] + A[k] == target)
+			long long int curr = (long long)A[i] + (long long)A[k];
+			// curr += A[i];
+			// curr += A[k];
+			if (curr == target)
 			{
 
-				vector<int> temp({A[i], A[j], A[k]});
+				vector<int> temp({A[j], A[i], A[k]});
 
 				ans.push_back(temp);
 
 				temp.clear();
+				while (i < k && A[i] == A[i + 1])
+					i++;
 
+				while (k > i && A[k] == A[k - 1])
+					k--;
 				i++;
+				k--;
 			}
-			else if (A[i] + A[k] > target)
+			else if (curr > target)
 				k--;
 			else
 				i++;
