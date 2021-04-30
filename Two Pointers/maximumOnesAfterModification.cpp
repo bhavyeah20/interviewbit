@@ -1,78 +1,28 @@
 int Solution::solve(vector<int> &A, int B) {
 	int n = A.size();
+
+	int i = 0;
+	int currLen = 0, len = INT_MIN;
 	int cnt = 0;
-	int initI = 0, finalI = 0, finalJ = 0;
-	int cntMax = INT_MIN;
-	for (int i = 0; i < n; i++) {
-		if (A[i])
+	for (int j = 0; j < n; j++)
+	{
+
+		if (!A[j])
 			cnt++;
-		else
-			cnt--;
 
-		if (cnt < 0) {
-			initI = i + 1;
-			continue;
-		}
-
-		if (cnt > cntMax || (cnt == cntMax && i - initI > finalJ - finalI))
-			cntMax = cnt, finalI = initI, finalJ = i;
-	}
-
-	int b = B;
-	int lcurr = 0, rcurr = 0;
-	for (int i = finalI; i <= finalJ; i++)
-	{
-		if (!A[i])
-			b--;
-
-		if (!b)
-			break;
-
-		lcurr++;
-	}
-	b = B;
-	for (int i = finalJ; i >= finalI; i--)
-	{
-		if (!A[i])
-			b--;
-
-		if (!b)
-			break;
-
-		rcurr++;
-	}
-
-	if (!b)
-		return max(lcurr, rcurr);
-
-	if (lcurr > rcurr) {
-		for (int i = finalJ + 1; i < n; i++) {
-			if (!A[i])
-				b--;
-
-			if (!b)
-				break;
-
-			lcurr++;
-		}
-
-		return lcurr;
-	}
-	else {
-		for (int i = finalJ - 1; i >= 0; i--)
+		while (cnt > B)
 		{
 			if (!A[i])
-				b--;
+				cnt--;
 
-			if (!b)
-				break;
+			i++;
 
-			rcurr++;
 		}
-		return rcurr;
+
+		currLen = j - i + 1;
+		len = max(len, currLen);
+
 	}
 
-
-
-
+	return len;
 }
