@@ -1,75 +1,97 @@
-#include<bits/stdc++.h>
-using namespace std;
+#define ll long long int
 
-#define pii pair<int,long long>
-#define ff first
-#define ss second
+const ll N = 1e5 + 1;
+const ll mod = 1e9 + 7;
+ll prod[N];
 
-const int mod = 1e9 + 7;
-const int nax = 1e5 + 1;
-vector<int> Solution::solve(vector<int> &A, vector<int> &B)
-{
-	vector<int> res;
-	vector<long long> val(nax, 1);
+void precompute() {
+	for (ll i = 1; i < N; i++) {
+		prod[i] = i;
+	}
 
-	for (int i = 2 ; i < nax ; i++ )
-	{
-		for (int j = i ; j < nax ; j += i)
-		{
-			val[j] *= i;
-			val[j] %= mod;
+	for (ll i = 2; i < N; i++) {
+		for (ll j = 2 * i; j < N; j += i) {
+			prod[j] = ((prod[j] % mod) * (i % mod)) % mod;
 		}
 	}
 
-	stack<int> fw, bw;
-	int n = (int)(A.size());
-	vector<int> a(n), b(n);
-	for (int i = 0 ; i < n ; i++ )
-	{
-		a[i] = 0;
-		while (!fw.empty() && A[fw.top()] <= A[i])
-			fw.pop();
-		if (!fw.empty()) a[i] = fw.top() + 1;
-		fw.push(i);
-		//cout << a[i] << " " ;
-	}
-	//cout << "\n";
-	for (int i = n - 1 ; i >= 0 ; i-- )
-	{
-		b[i] = n - 1;
-		while (!bw.empty() && A[bw.top()] < A[i])
-			bw.pop();
-		if (!bw.empty()) b[i] = bw.top() - 1;
-		bw.push(i);
-		//cout << b[i] << " " ;
-	}
-	//cout << "\n";
-	vector<pii> has;
+}
 
-	for (int i = 0 ; i < n ; i++ ) has.push_back({val[A[i]] , (long long)((b[i] - i + 1) * (i - a[i] + 1))});
-	sort(has.begin() , has.end() , greater<pii>() );
-
-	for (int i = 1 ; i < n ; i++ ) has[i].ss += has[i - 1].ss;
-	//cout << has[n-1].ss << "\n";
-	for (auto i : B)
-	{
-		int l = 0;
-		int h = n - 1;
-		int cur = -1;
-		while (l <= h)
-		{
-			int m = (l + h) >> 1;
-			if (i - 1 >= has[m].ss)
-			{
-				cur = m;
-				l = m + 1;
+bool compare(pair<ll, ll> a, pair<ll, ll> b) {
+	return a.first > b.first;
+}
+vector<int> Solution::solve(vector<int> &A, vector<int> &B) {
+	precompute();
+	ll n = A.size();
+	stack<ll> s;
+	s.push(0);
+	ll freq[n];
+	for (ll i = 1; i < n; i++) {
+		while (!s.empty() && A[s.top()] <= A[i]) {
+			ll idx = s.top();
+			s.pop();
+			ll left = idx + 1;
+			ll right = i - idx;
+			if (!s.empty()) {
+				left = idx - s.top();
 			}
-			else
-				h = m - 1;
+			freq[idx] = left * right;
 		}
-		res.push_back(has[cur + 1].ff);
+		s.push(i);
 	}
 
-	return res;
+	while (!s.empty()) {
+		ll idx = s.top();
+		s.pop();
+		ll left = idx + 1;
+		ll right = n - idx;
+		if (!s.empty()) {
+			left = idx - s.top();
+		}
+		freq[idx] = left * right;
+	}
 
+
+	vector<pair<ll, ll>> store;
+	for (ll i = 0; i < n; i++) {
+		store.push_back({prod[A[i]], freq[i]});
+	}
+
+	sort(store.begin(), store.end(), compare);
+
+	for (ll i = 1; i < n; i++) {
+		store[i].second += store[i - 1].second;
+	}
+
+	vector<ll> ans;
+	for (ll i = 0; i < B.size(); i++) {
+		ll q = B[i];
+		ll s = 0;
+		ll e = n - 1;
+
+		while (s <= e) {
+			ll m = s + (e - s) / 2;
+
+			if (q <= store[0].second) {
+				ans.push_back(store[0].first);
+				break;
+			}
+
+			if (q <= store[m].second && q > store[m - 1].second) {
+				ans.push_back(store[m].first);
+				break;
+			}
+
+			else if (q > store[m].second) {
+				s = m + 1;
+			}
+
+			else
+				e = m - 1;
+
+
+		}
+	}
+
+	return ans;
 }
