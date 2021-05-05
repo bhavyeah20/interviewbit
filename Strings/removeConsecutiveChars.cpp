@@ -1,7 +1,4 @@
-#include<bits/stdc++.h>
-
-using namespace std;
-string solve(string A, int B) {
+string Solution::solve(string A, int B) {
 	string ans = "";
 	int n = A.size();
 	if (B == 1)
@@ -15,14 +12,14 @@ string solve(string A, int B) {
 			continue;
 		}
 
-		cout << ans << endl;
+
 		int j = i;
 		while (i < n - 1 && A[i + 1] == A[i]) {
 			i++;
 		}
 
 		j = i - j + 1;
-		cout << j;
+
 		j = j >= B ? j - B : j;
 		while (j--) {
 			ans.push_back(A[i]);
@@ -37,8 +34,4 @@ string solve(string A, int B) {
 
 
 	return ans;
-}
-
-int main() {
-	cout << solve("aaagccc", 3);
 }

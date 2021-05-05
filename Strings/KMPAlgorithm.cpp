@@ -8,6 +8,7 @@ vector<int> prefixFunction(string &s) {
 	int n = s.size();
 	int len = 0; //pi(i)
 	for (int i = 1; i < n; i++) {
+		// j = pi[j - 1];
 		if (s[len] == s[i]) {
 			len++;
 			pi[i] = len;
