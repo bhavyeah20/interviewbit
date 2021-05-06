@@ -52,10 +52,55 @@ void KMP(string &s, string &pat) {
 
 }
 
-int main() {
-	string s = "AABAACAADAABAABA";
-	string pat = "AABA";
-	KMP(s, pat);
+vector<int> prefix(string s) {
+	int n = s.size();
+	int i = 0, j = 0;
+	vector<int> pi(n, 0);
 
+	for (int i = 1; i < n; i++) {
+		j = pi[i - 1];
+		while (j > 0 && s[i] != s[j])
+			j = pi[j - 1];
+
+		if (s[i] == s[j])
+			j++;
+
+		pi[i] = j;
+	}
+
+	return pi;
+}
+
+void strStr(const string A, const string pat) {
+
+	if (!pat.size() || !A.size())
+		return;
+	vector<int> pi = prefix(pat);
+	int j = 0;
+	for (int i = 0; i < A.size(); i++) {
+		if (A[i] == pat[j]) {
+			j++;
+			if (j == pat.size()) {
+				cout << i - j + 1 << " ";
+				j = pi[j - 1];
+			}
+			continue;
+		}
+		if (!j) {
+			i--;
+			j = pi[j - 1];
+		}
+	}
+
+
+
+}
+
+
+int main() {
+	string s = "bbaabbbbbaabbaabbbbbbabbbabaabbbabbabbbbababbbabbabaaababbbaabaaaba";
+	string pat = "babaaa";
+	KMP(s, pat);
 	cout << endl;
+	strStr(s, pat);
 }

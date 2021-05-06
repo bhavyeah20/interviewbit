@@ -1,8 +1,24 @@
-long long int prefixFunction(string s) {
-	long long int n = s.size();
-	long long int pre[n] = {0};
-	for (long long int i = 1; i < n; i++) {
-		long long int j = pre[i - 1];
+
+#define ll long long int
+
+ll powerr(ll a, ll b, ll mod) {
+	ll res = 1;
+	while (b) {
+		if (b & 1)
+			res = ((res % mod) * (a % mod)) % mod;
+
+		a = ((a % mod) * (a % mod)) % mod;
+		b >>= 1;
+	}
+
+	return res % mod;
+}
+
+ll prefixFunction(string s) {
+	ll n = s.size();
+	ll pre[n] = {0};
+	for (ll i = 1; i < n; i++) {
+		ll j = pre[i - 1];
 
 		while (j > 0 && s[i] != s[j])
 			j = pre[j - 1];
@@ -16,56 +32,47 @@ long long int prefixFunction(string s) {
 	return pre[n - 1];
 }
 
-long long int fpow(long long int x, long long int y) {
-	long long int mod = 1e9 + 7;
-	long long int res = 1;
-	while (y) {
-		if (y & 1) {
-			res = ((res % mod) * (x % mod)) % mod;
+int solve(vector<string> &A) {
+	ll n = A.size();
+	ll mod = 1e9 + 7;
+	vector<ll> t;
+	for (ll i = 0; i < n; i++) {
+		ll M = A[i].size();
+		ll lps = prefixFunction(A[i]);
+		ll len = 0;
+		if (!(M % (M - lps)))
+			len = M - lps;
+		else
+			len = M;
+
+		for (ll j = 1; j <= 2 * len - 1; j++) {
+			if (((j * (j + 1)) / 2) % len == 0) {
+				len = j;
+				break;
+			}
 		}
 
-		x = ((x % mod) * (x % mod)) % mod;
-		y >>= 1;
+		t.push_back(len);
 	}
 
-	return res % mod;
-}
+	ll curr = 1;
 
-long long int finalX(long long int x) {
-	long long int t = 1;
-	while (1) {
-		long long int t1 = (t * (t + 1) ) / 2;
-		if (t1 % x == 0)
-			return t;
-		t++;
-	}
-}
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) {
+			t[j] /= __gcd(t[i], t[j]);
+		}
 
-int Solution::solve(vector<string> &A) {
-	long long int n = A.size();
-	long long int mod = 1e9 + 7;
-	vector<long long int> t;
-	for (long long int i = 0; i < n; i++) {
-		long long int x = 1;
-		long long int m = prefixFunction(A[i]);
-		long long int len = 0;
+		curr = ((t[i] % mod * curr % mod) % mod);
 
-		if (!(A[i].size() % (A[i].size() - m)))
-			len = A[i].size() - m;
-		else
-			len = A[i].size();
-
-
-		x = finalX(len);
-		t.push_back(x);
 	}
 
-	long long int curr = 1;
-	for (long long int x : t) {
-		curr = (((x % mod * curr % mod) % mod) * fpow(__gcd(x, curr), mod - 2)) % mod;
-	}
 
 	return curr % mod;
 
 
 }
+
+// 1. Search for recurring pattern
+// 2. Take lcm of all ti
+// 3. Pay special attention to how mod is used with lcm
+// 4. As we are using gcd hence we cant take gcd(curr,ti) as curr as already been modded hence factors would change
