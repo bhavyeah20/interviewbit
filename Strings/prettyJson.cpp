@@ -9,7 +9,8 @@ vector<string> Solution::prettyJSON(string A) {
 		char x = A[i];
 		if (x == '{' || x == '[') {
 			if (i) {
-				ans.push_back(temp);
+				if (!temp.empty())
+					ans.push_back(temp);
 				temp = "";
 			}
 
@@ -25,13 +26,14 @@ vector<string> Solution::prettyJSON(string A) {
 
 		else if (x == '}' || x == ']') {
 			cntBrackets--;
-			ans.push_back(temp);
+			if (!temp.empty())
+				ans.push_back(temp);
 			temp = "";
 
 			for (int j = 0; j < cntBrackets; j++)
 				temp.push_back('\t');
 			temp.push_back(x);
-			if (i < n - 1 && A[i + 1] != ',') {
+			if ((i < n - 1 && A[i + 1] != ',') || i == n - 1) {
 				ans.push_back(temp);
 				temp = "";
 			}
