@@ -15,6 +15,8 @@ int Solution::singleNumber(const vector<int> &A) {
 	return ans;
 }
 
+// or
+
 
 int singleNumber(const vector<int> &A) {
 	int n = A.size();
