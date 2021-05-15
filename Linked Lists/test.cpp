@@ -4,14 +4,14 @@ using namespace std;
 #define endl "\n"
 #define lld long long int
 
-struct Node {
-	int data;
-	Node *next;
+struct ListNode {
+	int val;
+	ListNode *next;
 };
 
-void print(Node *head) {
+void print(ListNode *head) {
 	while (head != NULL) {
-		cout << head->data << " ";
+		cout << head->val << " ";
 		head = head->next;
 	}
 
@@ -19,10 +19,10 @@ void print(Node *head) {
 }
 
 
-void insert(Node **head, int pos, int val) {
-	Node *temp1 = *head;
-	Node *temp2 = new Node();
-	temp2->data = val, temp2->next = NULL;
+void insert(ListNode **head, int pos, int val) {
+	ListNode *temp1 = *head;
+	ListNode *temp2 = new ListNode();
+	temp2->val = val, temp2->next = NULL;
 
 	if (pos == 1) {
 		temp2->next = temp1;
@@ -43,9 +43,9 @@ void insert(Node **head, int pos, int val) {
 	return;
 }
 
-void remove(Node **head, int pos) {
+void remove(ListNode **head, int pos) {
 
-	Node *temp1 = *head, *temp2;
+	ListNode *temp1 = *head, *temp2;
 
 	if (pos == 1) {
 		*head = temp1->next;
@@ -66,19 +66,86 @@ void remove(Node **head, int pos) {
 }
 
 
+ListNode *rev(ListNode *t) {
+	ListNode *curr = t, *prev = NULL, *next = NULL;
+	while (curr) {
+		next = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = next;
+	}
+
+	return prev;
+}
+
+ListNode* solve(ListNode* A) {
+	ListNode *odd = new ListNode(), *even = new ListNode(), *curr = A, *next = NULL;
+	odd->val = 0, odd->next = NULL;
+	even->val = 0, even->next = NULL;
+
+	ListNode *oHead = odd, *eHead = even;
+	int cnt = 1;
+	while (curr) {
+		next = curr->next;
+
+		if (cnt) {
+			odd->next = curr;
+			odd = odd->next;
+		}
+		else {
+			even->next = curr;
+			even = even->next;
+		}
+
+		curr = next;
+		cnt = (cnt + 1) % 2;
+	}
+	eHead = eHead->next;
+	oHead = oHead->next;
+	odd->next = NULL;
+	even->next = NULL;
+
+	eHead = rev(eHead);
+
+
+
+	ListNode *ans = new ListNode();
+	ans->val = 0, ans->next = NULL;
+	ListNode *ansHead = ans;
+	even = eHead, odd = oHead;
+	cnt = 1;
+	ListNode *oNext = NULL, *eNext = NULL;
+	while (even || odd) {
+		if (cnt) {
+			oNext = odd->next;
+			ans->next = odd;
+			odd = oNext;
+		}
+		else {
+			eNext = even->next;
+			ans->next = even;
+			even = eNext;
+		}
+
+		ans = ans->next;
+		cnt = (cnt + 1) % 2;
+
+	}
+
+	return ans->next;
+}
+
 int main () {
 
-	Node *head = NULL;
-	insert(&head, 1, 40);
-	insert(&head, 1, 20);
-	insert(&head, 1, 10);
-	insert(&head, 4, 10000);
-	print(head);
-
-	remove(&head, 4);
-
+	ListNode *head = NULL;
+	insert(&head, 1, 4);
+	insert(&head, 1, 3);
+	insert(&head, 1, 2);
+	insert(&head, 1, 1);
 
 	print(head);
 
+	head = solve(head);
+	print(head);
 
 }
