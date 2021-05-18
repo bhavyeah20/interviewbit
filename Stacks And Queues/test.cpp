@@ -1,39 +1,56 @@
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 
-#define endl "\n"
-#define lld long long int
 
-int braces(string A) {
-	stack<char> s;
-	for (char x : A) {
-		if (x != ')')
-			s.push(x);
+vector<int> slidingMaximum(const vector<int> &A, int B) {
+	vector<int> ans;
+	priority_queue<int> q;
+	unordered_map<int, int> mp; //val->cnt;
+	int N = A.size();
+	if (B > N)
+		B = N;
 
-		else {
-			int cnt = 0;
-
-			while (!s.empty() && s.top() != '(') {
-				cout << s.top() << endl;
-				s.pop(), cnt++;
-			}
-			s.pop();
+	int i = 0;
+	for (i; i < B; i++) {
+		mp[A[i]]++;
+		if (mp[A[i]] <= 1)
+			q.push(A[i]);
 
 
-
-			if (cnt <= 1)
-				return 1;
-		}
+		cout << A[i] << " ";
 	}
 
+	cout << " max is " << q.top() << endl;
 
-	return 0;
+	ans.push_back(q.top());
+
+	for (i; i < N; i++) {
+
+		cout << "remove " << A[i - B];
+		cout << " add " << A[i];
+
+		mp[A[i - B]]--;
+
+		if (!mp[q.top()])
+			q.pop();
+
+		mp[A[i]]++;
+		if (mp[A[i]] <= 1)
+			q.push(A[i]);
+
+		ans.push_back(q.top());
+
+		cout << " max is " << q.top() << endl;
+	}
+
+	return ans;
+
+
 }
 
+int main() {
+	vector<int> test({251, 286, 420, 491, 506, 34, 716, 829, 615, 53, 807, 837, 750, 650, 181, 140, 543, 944, 210, 113, 551, 379, 818, 817, 227, 525, 257, 735, 932, 172, 410, 935, 351, 347, 521, 168, 482, 885, 612, 352});
+	int B = 9;
 
-int main () {
-
-	cout << braces("((a+b)*(c+d))");
-
-
+	vector<int> ans = slidingMaximum(test, B);
 }
