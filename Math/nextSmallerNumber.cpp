@@ -1,3 +1,5 @@
+//next permutation
+
 string Solution::solve(string s) {
 
 	int n = s.size();

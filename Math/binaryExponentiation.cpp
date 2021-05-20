@@ -27,10 +27,9 @@ int binaryExp(int a, int b)
 
 	while (b)
 	{
-		if (b % 2)
+		if (b & 1)
 		{
 			res *= a;    // res =(res * a) % c;
-			b--;
 		}
 		a *= a; 		// a = (a * a) % c;
 		b /= 2;
@@ -40,6 +39,22 @@ int binaryExp(int a, int b)
 	return res;
 
 }
+
+
+// int Solution::Mod(int A, int B, int C) {
+// 	long long res = 1;
+// 	long long a = A;
+// 	while (B) {
+// 		if (B & 1)
+// 			res = (res * 1LL * a) % C;
+
+// 		a = (a * 1LL * a) % C;
+// 		B >>= 1;
+// 	}
+
+// 	return (res+C) % C;   // handles negative
+// }
+
 
 int main()
 {
