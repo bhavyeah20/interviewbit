@@ -1,120 +1,50 @@
-// { Driver Code Starts
-// Initial Template for C++
-
 #include <bits/stdc++.h>
 using namespace std;
 
-// } Driver Code Ends
-// User function Template for C++
 
 
-vector<int> row(101, 0);
-vector<int> col(101, 0);
-vector<int> diag1(2 * 101 - 1, 0), diag2(2 * 101 - 1, 0);
+vector<int>  grayCode(int n) {
+	// Do not write main() function.
+	// Do not read input, instead use the arguments to the function.
+	// Do not print the output, instead return values as specified
+	// Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
 
-class Solution {
-public:
-
-
-
-	bool isValid(int x, int y, vector<vector<int> > board) {
-		int n = board.size();
-		if (x < 0 || x >= n || y < 0 || y >= n)
-			return 0;
-
-		if (row[x])
-			return 0;
-
-		if (col[y])
-			return 0;
+	vector<string> v({"0", "1"});
 
 
-		if (diag1[x + y])
-			return 0;
+	vector<string> v2;
 
-		if (diag2[x - y + n - 1])
-			return 0;
+	n -= 2;
 
 
-		return 1;
-
-	}
-
-	void nextQueen(int numQueen, vector<vector<int> > &board, vector<int> iAns, vector<vector<int> > &ans) {
-		int n = board.size();
-		if (numQueen == n + 1) {
-			ans.push_back(iAns);
-			for (int i = 0; i < board.size(); i++) {
-				cout << "[";
-				for (int u : board[i])
-					cout << u << " ";
-				cout << "] " << endl;
-			}
-			cout << endl;
-			return ;
+	while (n--) {
+		for (int i = 0; i < v.size(); i++) {
+			v2.push_back("0" + v[i]);
 		}
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (isValid(i, j, board)) {
-					board[i][j] = 1;
-
-					row[i] = 1, col[j] = 1, diag1[i + j] = 1, diag2[i - j + n - 1] = 1;
-
-					iAns.push_back(j + 1);
-					// cout << "Placing queen number " << numQueen << "at " << i << " " << j << endl;
-
-					nextQueen(numQueen + 1, board, iAns, ans);
-
-
-					board[i][j] = 0;
-					row[i] = 0, col[j] = 0, diag1[i + j] = 0, diag2[i - j + n - 1] = 0;
-					iAns.pop_back();
-				}
-			}
+		for (int i = 0; i < v.size(); i++) {
+			v2.push_back("1" + v[v.size() - 1 - i]);
 		}
 
+		v = v2;
+		v2.clear();
 	}
 
 
-
-	vector<vector<int>> nQueen(int n) {
-		vector<vector<int> > board(n, vector<int> (n, 0));
-		vector<int> iAns;
-		vector<vector<int> > ans;
-		nextQueen(1, board, iAns, ans);
-		// for (int i = 0; i < board.size(); i++) {
-		// 	cout << "[";
-		// 	for (int u : board[i])
-		// 		cout << u << " ";
-		// 	cout << "] ";
-		// }
-		return ans;
+	vector<int> ans;
+	for (string s : v) {
+		ans.push_back(stoi(s));
 	}
-};
 
+	return ans;
 
+}
 
-// { Driver Code Starts.
+int main()
+{
+	vector<int> v1({1, 2, 3});
+	vector<int> v2({1, 2, 3});
 
-int main() {
-	int t;
-	cin >> t;
-	while (t--) {
-		int n;
-		cin >> n;
-
-		Solution ob;
-		vector<vector<int>> ans = ob.nQueen(n);
-		if (ans.size() == 0)
-			cout << -1 << "\n";
-		else {
-			for (int i = 0; i < ans.size(); i++) {
-				cout << "[";
-				for (int u : ans[i])
-					cout << u << " ";
-				cout << "] " << endl;
-			}
-			cout << endl;
-		}
+	if (v1 == v2) {
+		cout << "hello";
 	}
-}  // } Driver Code Ends
+}

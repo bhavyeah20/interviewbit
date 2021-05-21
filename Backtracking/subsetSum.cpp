@@ -1,65 +1,49 @@
-
-
-// { Driver Code Starts
-// Initial Template for C++
-
 #include <bits/stdc++.h>
 using namespace std;
 
-// } Driver Code Ends
-// User function Template for C++
 
-class Solution {
-public:
-	int equalPartition(int N, int arr[])
-	{
-		return subsetSum;
+void nextSubset(vector<int> weights, int t, vector<int> comb, vector<vector<int>> &ans, int sum, int left) {
+	if (sum == t) {
+		ans.push_back(comb);
+		return;
 	}
 
+	for (int i = left; i < weights.size(); i++) {
 
+		if (sum + weights[i] <= t) {
+			sum += weights[i];
+			comb.push_back(weights[i]);
 
+			nextSubset(weights, t, comb, ans, sum, i + 1);
 
-	int subsetSum(int &currSum, vector<int> iAns, vector<vector<int> > &ans) {
-
-
-		if (currSum == k) {
-			return 1;
-			// ans.push(iAns);
-			// return;
-		}
-
-		if (currSum > k)
-			iAns.pop_back();
-
-		for (int i = 0; i < n; i++) {
-			currSum += arr[i];
-			iAns.push_back(arr[i]);
-
-			subsetSum(currSum);
-
-			iAns.pop_back();
+			comb.pop_back();
+			sum -= weights[i];
 		}
 	}
+}
 
-};
 
-// { Driver Code Starts.
+vector<vector<int> > findSubset(vector<int> weights, int t) {
+	vector<int> comb;
+	vector<vector<int> > ans;
+	nextSubset(weights, t, comb, ans, 0, 0);
+	return ans;
+}
 
-int main() {
-	int t;
-	cin >> t;
-	while (t--) {
-		int N;
-		cin >> N;
-		int arr[N];
-		for (int i = 0; i < N; i++)
-			cin >> arr[i];
 
-		Solution ob;
-		if (ob.equalPartition(N, arr))
-			cout << "YES\n";
-		else
-			cout << "NO\n";
+
+// Driver Code
+int main()
+{
+	vector<int> weights({0, 1, 2});
+	sort(weights.begin(), weights.end());
+	vector<vector<int> > ans;
+	ans = findSubset(weights, 3);
+	for (auto v : ans) {
+		for (int x : v)
+			cout << x << " ";
+		cout << endl;
 	}
-	return 0;
-}  // } Driver Code Ends
+
+	cout << ans.size();
+}
