@@ -1,3 +1,59 @@
+int row[101] = {0};
+int ld[101] = {0};
+int rd[101] = {0};
+
+bool isValid(int i, int j, int n) {
+	if (row[i] || ld[i + j] || rd[i - j + n - 1])
+		return 0;
+
+	return 1;
+}
+
+
+void nextQueen(int n, int col, vector<string> board, vector<vector<string> > &ans) {
+	if (col == n) {
+		ans.push_back(board);
+		return;
+	}
+
+	for (int i = 0; i < n; i++) {
+		if (isValid(i, col, n)) {
+			board[i][col] = 'Q';
+			row[i] = 1;
+			ld[i + col] = 1;
+			rd[i - col + n - 1] = 1;
+			nextQueen(n, col + 1, board, ans);
+
+			board[i][col] = '.';
+			row[i] = 0;
+			ld[i + col] = 0;
+			rd[i - col + n - 1] = 0;
+		}
+	}
+}
+
+
+
+
+vector<vector<string> > Solution::solveNQueens(int n) {
+	// Do not write main() function.
+	// Do not read input, instead use the arguments to the function.
+	// Do not print the output, instead return values as specified
+	// Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
+
+	vector<string> board(n, string(n, '.'));
+	vector<vector<string> > ans;
+
+	nextQueen(n, 0, board, ans);
+	return ans;
+
+}
+
+
+// or
+
+
+
 /* C/C++ program to solve N Queen Problem using
 backtracking */
 #define N 4
