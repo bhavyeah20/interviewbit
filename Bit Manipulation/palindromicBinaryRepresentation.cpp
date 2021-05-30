@@ -1,3 +1,46 @@
+int getRev(int x) {
+	int rev = 0;
+	while (x) {
+		rev |= x & 1;
+		x >>= 1;
+		rev <<= 1;
+	}
+
+	rev >>= 1;
+	return rev;
+}
+
+int Solution::solve(int A) {
+	int cnt = 1;
+	int len = 1;
+
+	while (cnt < A) {
+		len++;
+		int numsTillLen = 1 << ((len - 1) / 2);
+		cnt += numsTillLen;
+
+	}
+
+
+	cnt -= 1 << ((len - 1) / 2);
+
+
+	int offset = A - cnt - 1;
+
+	int ans = 1 << (len - 1);
+	ans |= offset << (len / 2);
+
+	int rev = ans >> (len / 2);
+	rev = getRev(rev);
+
+	ans |= rev;
+
+	return ans;
+
+}
+
+//or
+
 int convertToNum(string s) {
 	int sz = s.size();
 	int num = 0;
@@ -46,49 +89,6 @@ int Solution::solve(int A) {
 	}
 }
 
-
-//or
-
-int getRev(int x) {
-	int rev = 0;
-	while (x) {
-		rev |= x & 1;
-		x >>= 1;
-		rev <<= 1;
-	}
-
-	rev >>= 1;
-	return rev;
-}
-
-int Solution::solve(int A) {
-	int cnt = 1;
-	int len = 1;
-
-	while (cnt < A) {
-		len++;
-		int numsTillLen = 1 << ((len - 1) / 2);
-		cnt += numsTillLen;
-
-	}
-
-
-	cnt -= 1 << ((len - 1) / 2);
-
-
-	int offset = A - cnt - 1;
-
-	int ans = 1 << (len - 1);
-	ans |= offset << (len / 2);
-
-	int rev = ans >> (len / 2);
-	rev = getRev(rev);
-
-	ans |= rev;
-
-	return ans;
-
-}
 
 //or
 
