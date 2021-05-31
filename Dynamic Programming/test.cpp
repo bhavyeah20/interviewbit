@@ -2,38 +2,69 @@
 
 using namespace std;
 
-int dp[101][101];
+typedef long long ll;
 
-int subset(vector<int>& wt, int t, int n) {
+vector<ll> cuts;
+vector<int> ans;
+vector<vector<ll>> dp;
+vector<vector<ll>> pr;
+
+void make(int l, int r);
+ll f(int l, int r);
+vector<int> Solution::rodCut(int A, vector<int> &B) {
+	B.push_back(A);
+	B.insert(B.begin(), 0);
+	ll n = B.size();
+	cuts.clear();
+	ans.clear();
+	dp = vector<vector<ll>> (n, vector<ll> (n, -1));
+	pr = vector<vector<ll>> (n, vector<ll> (n, -1));
+
+	for (int i = 0; i < n; ++i)
+		cuts.push_back(B[i]);
+
+	f(0, n - 1);
+
+	make(0, n - 1);
+
+	return ans;
+}
+
+void make(int l, int r) {
+	if (l + 1 >= r) return;
+
+	ans.push_back(cuts[pr[l][r]]);
+
+	make(l, pr[l][r]);
+	make(pr[l][r], r);
+}
+
+ll f(int l, int r) {
+	if (l + 1 >= r) return 0;
+
+	if (dp[l][r] != -1) return dp[l][r];
+
+	ll res = LONG_LONG_MAX, bin = -1;
 
 
-	int count = 0;
-	for (int j = 0; j < t + 1; j++) {
-		dp[0][j] = 0;
-	}
-	for (int i = 0; i < n + 1; i++) {
-		dp[i][0] = 1;
-	}
+	for (int k = l + 1; k < r; ++k) {
+		ll c = cuts[r] - cuts[l] + f(l, k) + f(k, r);
 
-	for (int i = 1; i < n + 1; i++) {
-		for (int j = 1; j < t + 1; j++) {
-			if (wt[i - 1] <= j) {
-				dp[i][j] = dp[i - 1][j - wt[i - 1]] + dp[i - 1][j];
-			}
-
-			else
-				dp[i][j] = dp[i - 1][j];
-
+		if (c < res) {
+			res = c;
+			bin = k;
 		}
 	}
 
-	return dp[n][t];
+	dp[l][r] = res;
+	pr[l][r] = bin;
 
+	return res;
 }
-
-
-int main() {
-
-	vector<int> wt({2, 3, 5, 6, 8, 10});
-	cout << subset(wt, 10, wt.size());
+int main()
+{
+	vector<int> v({1, 2, 5});
+	vector<int> ans =  rodCut(6, v);
+	for (int x : ans)
+		cout << x << " ";
 }

@@ -70,8 +70,20 @@ int subsetSumTabular(vector<int> wt, int target, int n) {
 	return dp[n][target];
 }
 
+int subsetSumSpaceOptimized() {
+	int n = nums.length;
+	boolean[] dp = new boolean[sum + 1];
+	Arrays.fill(dp, false);
+	dp[0] = true;
 
-
+	for (int num : nums) {
+		for (int i = sum; i > 0; i--) {
+			if (i >= num) {
+				dp[i] = dp[i] || dp[i - num];
+			}
+		}
+	}
+}
 int main() {
 
 	memset(dp, -1, sizeof(dp));
