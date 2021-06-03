@@ -19,6 +19,7 @@ int cutRod(int price[], int n)
 
 }
 
+// or
 
 int cutRod(int price[], int n)
 {
