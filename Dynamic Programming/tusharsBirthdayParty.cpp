@@ -1,7 +1,4 @@
-wt -> filling capacity of dish
-val -> minCost
-W -> capacity of friendd
-int minCost(vector<int> wt, vector<int> val, int W) {
+int minCost(vector<int> wt, vector<int> val, int W, vector<int> friendd) {
 	int n = wt.size();
 	int dp[n + 1][W + 1];
 
@@ -9,7 +6,7 @@ int minCost(vector<int> wt, vector<int> val, int W) {
 		dp[i][0] = 0;
 
 	for (int j = 0; j < W + 1; j++)
-		dp[0][j] = 0;
+		dp[0][j] = 1000000;
 
 	for (int i = 1; i < n + 1; i++) {
 		for (int j = 1; j < W + 1; j++) {
@@ -21,17 +18,20 @@ int minCost(vector<int> wt, vector<int> val, int W) {
 		}
 	}
 
-	return dp[n][W];
+	int total = 0;
+	for (int x : friendd)
+		total += dp[n][x];
+
+	return total;
 }
 
 
 int Solution::solve(const vector<int> &friendd, const vector<int> &capacity, const vector<int> &cost) {
 
 	int total = 0;
-	for (int i = 0; i < friendd.size(); i++) {
-		total += minCost(capacity, cost, friendd[i]);
-	}
+	int W = *max_element(friendd.begin(), friendd.end());
 
-	return total;
+	return minCost(capacity, cost, W, friendd);
+
 
 }
