@@ -2,68 +2,51 @@
 
 using namespace std;
 
-int dp[151][151][2];
-int mod = 1003;
-
-int ways(string s, int i, int j, bool T) {
-
-	if (i == j) {
-		if (T)
-			return s[i] == 'T' ? 1 : 0;
-		return s[i] == 'T' ? 0 : 1;
+class Solution {
+	public int superEggDrop(int K, int N) {
+		return dp(K, N);
 	}
 
-	int ans = 0;
+	Map<Integer, Integer> memo = new HashMap();
+	public int dp(int K, int N) {
+		if (!memo.containsKey(N * 100 + K)) {
+			int ans;
+			if (N == 0)
+				ans = 0;
+			else if (K == 1)
+				ans = N;
+			else {
+				int lo = 1, hi = N;
+				while (lo + 1 < hi) {
+					int x = (lo + hi) / 2;
+					int t1 = dp(K - 1, x - 1);
+					int t2 = dp(K, N - x);
 
-	if (dp[i][j][T] != -1)
-		return dp[i][j][T];
+					if (t1 < t2)
+						lo = x;
+					else if (t1 > t2)
+						hi = x;
+					else
+						lo = hi = x;
+				}
 
-	for (int k = i + 1; k < j; k += 2) {
-		if (dp[i][k - 1][1] == -1)
-			dp[i][k - 1][1] = ways(s, i, k - 1, 1);
+				ans = 1 + Math.min(Math.max(dp(K - 1, lo - 1), dp(K, N - lo)),
+				                   Math.max(dp(K - 1, hi - 1), dp(K, N - hi)));
+			}
 
-		if (dp[i][k - 1][0] == -1)
-			dp[i][k - 1][0] = ways(s, k + 1, j, 0);
-
-
-		if (dp[k + 1][j][1] == -1)
-			dp[k + 1][j][1] = ways(s, k + 1, j, 1);
-
-
-		if (dp[k + 1][j][0] == -1)
-			dp[k + 1][j][0] = ways(s, k + 1, j, 0);
-
-
-		if (s[k] == '&') {
-			if (T)
-				ans += dp[i][k - 1][1] * dp[k + 1][j][1];
-			else
-				ans += dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][0] * dp[k + 1][j][0];
-		}
-		else if (s[k] == '|') {
-			if (T)
-				ans += dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][1] * dp[k + 1][j][1];
-			else
-				ans += dp[i][k - 1][0] * dp[k + 1][j][0];
+			memo.put(N * 100 + K, ans);
 		}
 
-		else {
-			if (T)
-				ans += dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1];
-			else
-				ans += dp[i][k - 1][0] * dp[k + 1][j][0] + + dp[i][k - 1][1] * dp[k + 1][j][1];
-		}
-
+		return memo.get(N * 100 + K);
 	}
-	return dp[i][j][T] = ans % mod ;
-}
-
-int countWays(int N, string s) {
-	memset(dp, -1, sizeof(dp));
-	return ways(s, 0, N - 1, true);
 }
 int main()
 {
-	string s = "T^F";
-	cout << countWays(s.size(), s);
+	cout << superEggDrop(3, 20) << endl;
+	for (int i = 0; i < 3 + 1; i++) {
+		for (int j = 0; j < 20 + 1; j++)
+			cout << setw(3) << dp[i][j] << " ";
+		cout << endl;
+	}
+
 }

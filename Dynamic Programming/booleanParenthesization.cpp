@@ -43,6 +43,7 @@ int countWays(int N, string s) {
 
 
 int dp[201][201][2];
+//or u_m<string,int> string -> i_j_T
 int mod = 1003;
 
 int ways(string s, int i, int j, bool T) {
