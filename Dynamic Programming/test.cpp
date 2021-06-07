@@ -2,51 +2,38 @@
 
 using namespace std;
 
-class Solution {
-	public int superEggDrop(int K, int N) {
-		return dp(K, N);
+public boolean is_Interleave(String s1, int i, String s2, int j, String s3, int k, int[][] memo) {
+	if (i == s1.length()) {
+		return s2.substring(j).equals(s3.substring(k));
 	}
-
-	Map<Integer, Integer> memo = new HashMap();
-	public int dp(int K, int N) {
-		if (!memo.containsKey(N * 100 + K)) {
-			int ans;
-			if (N == 0)
-				ans = 0;
-			else if (K == 1)
-				ans = N;
-			else {
-				int lo = 1, hi = N;
-				while (lo + 1 < hi) {
-					int x = (lo + hi) / 2;
-					int t1 = dp(K - 1, x - 1);
-					int t2 = dp(K, N - x);
-
-					if (t1 < t2)
-						lo = x;
-					else if (t1 > t2)
-						hi = x;
-					else
-						lo = hi = x;
-				}
-
-				ans = 1 + Math.min(Math.max(dp(K - 1, lo - 1), dp(K, N - lo)),
-				                   Math.max(dp(K - 1, hi - 1), dp(K, N - hi)));
-			}
-
-			memo.put(N * 100 + K, ans);
-		}
-
-		return memo.get(N * 100 + K);
+	if (j == s2.length()) {
+		return s1.substring(i).equals(s3.substring(k));
 	}
+	if (memo[i][j] >= 0) {
+		return memo[i][j] == 1 ? true : false;
+	}
+	boolean ans = false;
+	if (s3.charAt(k) == s1.charAt(i) && is_Interleave(s1, i + 1, s2, j, s3, k + 1, memo)
+	        || s3.charAt(k) == s2.charAt(j) && is_Interleave(s1, i, s2, j + 1, s3, k + 1, memo)) {
+		ans = true;
+	}
+	memo[i][j] = ans ? 1 : 0;
+	return ans;
 }
-int main()
-{
-	cout << superEggDrop(3, 20) << endl;
-	for (int i = 0; i < 3 + 1; i++) {
-		for (int j = 0; j < 20 + 1; j++)
-			cout << setw(3) << dp[i][j] << " ";
-		cout << endl;
+public boolean isInterleave(String s1, String s2, String s3) {
+	if (s1.length() + s2.length() != s3.length()) {
+		return false;
 	}
+	int memo[][] = new int[s1.length()][s2.length()];
+	for (int i = 0; i < s1.length(); i++) {
+		for (int j = 0; j < s2.length(); j++) {
+			memo[i][j] = -1;
+		}
+	}
+	return is_Interleave(s1, 0, s2, 0, s3, 0, memo);
+}
+int main() {
+
+	cout << addBinary("111", "11");
 
 }
