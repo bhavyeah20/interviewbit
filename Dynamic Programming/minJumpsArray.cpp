@@ -1,16 +1,25 @@
-#include<bits/stdc++.h>
+int Solution::jump(vector<int> &A) {
+	int n = A.size();
+	vector<int> dp(n, INT_MAX - 1);
+	dp[0] = 1;
 
-using namespace std;
+	for (int i = 1; i < n; i++) {
+		for (int j = i - 1; j >= 0; j--) {
+			if (j + A[j] >= i)
+				dp[i] = min(dp[i], 1 + dp[j]);
+		}
+
+		if (dp[i] == INT_MAX - 1)
+			return -1;
+	}
+
+	return dp[n - 1];
+}
+
+//
+
 class Solution {
 public:
-
-	void print(	queue<pair<int, pair<int, int>> > &q) {
-		while (!q.empty()) {
-			pair<int, pair<int, int>> f = q.front();
-			cout << f.first << " " << f.second.first << " " << f.second.second << endl;
-			q.pop();
-		}
-	}
 	int jump(vector<int>& A) {
 		int n = A.size();
 		queue<pair<int, pair<int, int>> > q;
@@ -19,9 +28,8 @@ public:
 		q.push({0, {0, A[0]}});
 
 		for (int i = 1; i < n; i++) {
-			print(q);
 			pair<int, pair<int, int>> f = q.front();
-			while (!q.empty() && f.second.first + f.second.second < i) {
+			while (!q.empty() && f.second.first + f.second.first < i) {
 				q.pop();
 				if (!q.empty())
 					f = q.front();
@@ -38,10 +46,3 @@ public:
 	}
 
 };
-
-int main() {
-	vector<int> v({2, 3, 1, 1, 4});
-	Solution s;
-	cout << s.jump(v);
-
-}

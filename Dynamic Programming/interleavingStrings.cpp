@@ -1,39 +1,74 @@
+class Solution {
+public:
+	bool isValid(string s1, string s2, string s3, int i, int j, int k) {
+
+		if (i == s1.length() && j == s2.length())
+			return k == s3.length();
+
+
+		if (i < s1.length()) {
+			if (s1[i] == s3[k]) {
+				if (isValid(s1, s2, s3, i + 1, j, k + 1))
+					return true;
+			}
+		}
+
+		if (j < s2.length()) {
+			if (s2[j] == s3[k]) {
+				if (isValid(s1, s2, s3, i, j + 1, k + 1))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool isInterleave(string s1, string s2, string s3) {
+		return isValid(s1, s2, s3, 0, 0, 0);
+	}
+};
 
 // memoized
-unordered_map<string, int> mp;
 
-bool isValid(string A, int i, string B, int j, string C, int k) {
-	if (i == A.length() && j == B.length())
-		return k == C.length();
+class Solution {
+public:
 
-	string key = to_string(i) + " " + to_string(j) + " " + to_string(k);
+	unordered_map<string, int> mp;
+	bool isValid(string s1, string s2, string s3, int i, int j) {
 
-	if (mp.find(key) != mp.end())
-		return mp[key];
+		if (i == s1.length() && j == s2.length())
+			return i + j == s3.length();
 
-	if (i == A.length())
-		return mp[key] = B[j] == C[k] && B.substr(j) == C.substr(k);
+		string key = to_string(i) + " " + to_string(j);
+		if (mp.find(key) != mp.end())
+			return mp[key];
 
-	if (j == B.length())
-		return mp[key] = A[i] == C[k] && A.substr(i) == C.substr(k);
+		bool one = 0, two = 0;
 
-	bool one = 0, two = 0;
+		if (i < s1.length()) {
+			if (s1[i] == s3[i + j]) {
+				if (isValid(s1, s2, s3, i + 1, j))
+					one = 1;
+			}
+		}
 
-	if (A[i] == C[k])
-		one = isValid(A, i + 1, B, j, C, k + 1);
+		if (j < s2.length()) {
+			if (s2[j] == s3[i + j]) {
+				if (isValid(s1, s2, s3, i, j + 1))
+					two = 1;
+			}
+		}
 
-	if (B[j] == C[k])
-		two = isValid(A, i, B, j + 1, C, k + 1);
+		return mp[key] = one | two;
+	}
 
-	return mp[key] = one | two;
+	bool isInterleave(string s1, string s2, string s3) {
+		mp.clear();
+		return isValid(s1, s2, s3, 0, 0);
+	}
+};
+//tabular
 
-
-}
-
-int Solution::isInterleave(string A, string B, string C) {
-	mp.clear();
-	return isValid(A, 0, B, 0, C, 0);
-}
 
 //
 
