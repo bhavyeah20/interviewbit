@@ -1,47 +1,47 @@
 #include<bits/stdc++.h>
 
 using namespace std;
-class Solution {
-public:
 
-	void print(	queue<pair<int, pair<int, int>> > &q) {
-		while (!q.empty()) {
-			pair<int, pair<int, int>> f = q.front();
-			cout << f.first << " " << f.second.first << " " << f.second.second << endl;
-			q.pop();
-		}
-	}
-	int jump(vector<int>& A) {
-		int n = A.size();
-		queue<pair<int, pair<int, int>> > q;
-		pair<int, pair<int, int>> ans;
-		// min jumps,idx,jumps from A[i]
-		q.push({0, {0, A[0]}});
+vector<bool> dp(10000000000001, 0);
 
-		for (int i = 1; i < n; i++) {
-			print(q);
-			pair<int, pair<int, int>> f = q.front();
-			while (!q.empty() && f.second.first + f.second.second < i) {
-				q.pop();
-				if (!q.empty())
-					f = q.front();
-			}
-			if (q.empty())
-				return -1;
+vector<int> solve(int A, int B, int C, int D) {
+	vector<int> ans;
+	int cnt = 0;
+	dp[A] = 1, dp[B] = 1, dp[C] = 1;
+	for (int i = 1; cnt < D ; i++) {
 
-			ans = {f.first + 1, {i, A[i]}};
-			q.push(ans);
-
+		if (i == A || i == B || i == C) {
+			ans.push_back(i);
+			cnt++;
+			continue;
 		}
 
-		return ans.first;
+
+		if (i % A == 0 && dp[i / A]) {
+			ans.push_back(i);
+			cnt++;
+			dp[i] = 1;
+		}
+		else if (i % B == 0 && dp[i / B]) {
+			ans.push_back(i);
+			cnt++;
+			dp[i] = 1;
+		}
+		else if (i % C == 0 && dp[i / C]) {
+			ans.push_back(i);
+			cnt++;
+			dp[i] = 1;
+		}
 	}
 
-};
+
+
+	return ans;
+}
+
 
 int main() {
-	vector<int> v({2, 3, 1, 1, 4});
-	Solution s;
-	cout << s.jump(v);
-
+	vector<int> v =  solve(2, 3, 5, 1000);
+	for (int x : v)
+		cout << x << " ";
 }

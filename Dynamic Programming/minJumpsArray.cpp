@@ -1,7 +1,7 @@
 int Solution::jump(vector<int> &A) {
 	int n = A.size();
 	vector<int> dp(n, INT_MAX - 1);
-	dp[0] = 1;
+	dp[0] = 0;
 
 	for (int i = 1; i < n; i++) {
 		for (int j = i - 1; j >= 0; j--) {
@@ -46,3 +46,23 @@ public:
 	}
 
 };
+
+//
+
+int Solution::jump(vector<int> &A) {
+	int currEnd = 0, currFar = 0, jumps = 0;
+	for (int i = 0; i < A.size(); i++) {
+
+		if (i > currFar)
+			return -1;
+		currFar = max(currFar, i + A[i]);
+
+		if (i < A.size() - 1 && i == currEnd) {
+			jumps++;
+			currEnd = currFar;
+		}
+
+	}
+
+	return jumps;
+}
