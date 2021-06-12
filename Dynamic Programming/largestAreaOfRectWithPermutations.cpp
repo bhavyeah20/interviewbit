@@ -1,78 +1,45 @@
-class Solution {
-public:
-	int maximalRectangle(vector<vector<char>>& A) {
-		if (A.empty())
-			return 0;
-		int n = A.size();
-		int m = A[0].size();
-		int curr, maxx = 0;
+// with permutations
+
+int Solution::solve(vector<vector<int> > &A) {
+	int n = A.size(), m = A[0].size();
+	int curr , maxx = 0;
+	vector<vector<int> > area(n, vector<int> (m, 0));
+
+	for (int j = 0; j < m; j++) {
+		int cnt = 0;
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if (A[i][j] == '0')
-					continue;
-
-				int level = i;
-				int jMax = m;
-				while (level < n && A[level][j] == '1') {
-					int j1 = j;
-					for (j1; j1 < jMax; j1++)
-						if (A[level][j1] == '0') break;
-
-					curr = (level - i + 1) * (j1 - j);
-					maxx = max(maxx, curr);
-					jMax = j1;
-					level++;
-				}
+			if (!A[i][j])
+				cnt = 0;
+			else {
+				cnt++;
+				area[i][j] = cnt;
 			}
 		}
-		return maxx;
 	}
-};
 
-//
+	for (int i = 0; i < n; i++) {
+		// sort(area[i].begin(), area[i].end(), greater<int> ());
+		//or
 
-class Solution {
-public:
-	int maximalRectangle(vector<vector<char>>& A) {
-		if (A.empty())
-			return 0;
-		int n = A.size();
-		int m = A[0].size();
-		vector<vector<int> > area(n, vector<int> (m, 0));
-		int curr = 0, maxx = 0;
-		for (int i = 0; i < n; i++) {
-			int cnt = 0;
-			for (int j = m - 1; j >= 0; j--) {
-				if (A[i][j] == '0') {
-					cnt = 0;
-				}
+		int count[n + 1] = {0};
+		for (int j = 0; j < m; j++)
+			count[area[i][j]]++;
 
-				else {
-					cnt++;
-					area[i][j] = cnt;
-				}
+		int col = 0;
+		for (int row = n; row >= 0; row--) {
+			while (count[row]) {
+				area[i][col] = row;
+				col++;
+				count[row]--;
 			}
 		}
 
-		for (int j = 0; j < m; j++) {
-			stack<int> s;
-			for (int i = 0; i < n; i++) {
-				while (!s.empty() && area[s.top()][j] > area[i][j]) {
-					int t = area[s.top()][j];
-					s.pop();
-					curr = s.empty() ? t * i : t * (i - s.top() - 1);
-					maxx = max(curr, maxx);
-				}
-				s.push(i);
-			}
 
-			while (!s.empty()) {
-				int t = area[s.top()][j];
-				s.pop();
-				curr = s.empty() ? t * n : t * (n - s.top() - 1);
-				maxx = max(curr, maxx);
-			}
+		for (int j = 0; j < m && area[i][j]; j++) {
+			curr = area[i][j] * (j + 1);
+			maxx = max(maxx, curr);
 		}
-		return maxx;
 	}
-};
+
+	return maxx;
+}
