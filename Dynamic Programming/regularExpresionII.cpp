@@ -8,21 +8,22 @@ public:
 
         for (int i = 1; i < n + 1; i++) {
             if (p[i - 1] == '*')
-                dp[i][0] = dp[i - 1][0];
+                dp[i][0] = dp[i - 2][0];
         }
 
         for (int i = 1; i < n + 1; i++) {
             for (int j = 1; j < m + 1; j++) {
-                if (s[j - 1] == p[i - 1] || p[i - 1] == '?')
+                if (s[j - 1] == p[i - 1] || p[i - 1] == '.')
                     dp[i][j] = dp[i - 1][j - 1];
 
                 else if (p[i - 1] == '*') {
-                    dp[i][j] = dp[i - 1][j];
+                    dp[i][j] = dp[i - 2][j];
 
                     if (dp[i][j])
                         continue;
 
-                    dp[i][j] = dp[i][j - 1];
+                    if (p[i - 2] == s[j - 1] || p[i - 2] == '.')
+                        dp[i][j] = dp[i][j - 1];
                 }
             }
         }
@@ -32,3 +33,7 @@ public:
 
 
 };
+
+
+// mis* -> mi or mis s*
+//s[j] = p[i] top left, p[i] = '.' top left, if p[i] = '*', two above(* -> 0 mi) or one left (mis s*)
