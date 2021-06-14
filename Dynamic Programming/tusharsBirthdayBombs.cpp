@@ -29,3 +29,25 @@ vector<int> Solution::solve(int A, vector<int> &B) {
 	return combs;
 
 }
+
+// or
+
+vector<int> Solution::solve(int A, vector<int> &B) {
+	int N = B.size();
+	int minStren = *min_element(B.begin(), B.end());
+	vector<int> ans;
+
+	for (int i = 0; i < N && A > 0; i++) {
+		int kicksNow = (A - B[i]) / minStren;
+		int kicksMax = (A - minStren) / minStren;
+
+		if (kicksMax == kicksNow && A - B[i] >= 0) {
+			A -= B[i];
+			ans.push_back(i);
+			i--;
+		}
+	}
+
+	return ans;
+}
+

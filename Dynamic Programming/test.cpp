@@ -1,56 +1,43 @@
 #include<bits/stdc++.h>
 
 using namespace std;
-int solve(vector<vector<int> > &A) {
-	int n = A.size(), m = A[0].size();
-	for (int i = 0; i < n; i++) {
-		int cnt = 0;
-		for (int j = m - 1; j >= 0 ; j--) {
-			if (!A[i][j])
-				cnt = 0;
 
-			else
-				A[i][j] = ++cnt;
-		}
-	}
+int maximumSumRectangle(int R, int C, vector<vector<int>> M) {
+	vector<int> sum(R, 0);
+	int maxSum = INT_MIN;
+	for (int left = 0; left < C ; left++) {
+		fill_n(sum.begin(), R, 0);
+		for (int right = left; right < C; right++) {
+			//Removed liability of Top and Bottom n^4 -> n^2
 
-
-	int curr = 0, maxArea = 0;
-	for (int j = 0; j < m; j++) {
-		stack<int> s;
-		for (int i = 0; i < n; i++ ) {
-			while (!s.empty() && A[s.top()][j] > A[i][j]) {
-				int top = A[s.top()][j];
-				s.pop();
-				int len = s.empty() ? i : i - s.top() + 1;
-
-				if (len == top)
-					maxArea = max(maxArea, top * len);
+			//Store sum of each row in a sum array
+			for (int row = 0; row < R; row++) {
+				sum[row] += M[row][right];
 			}
-			s.push(i);
+
+			//Apply kadanes on this row sum vertically
+			//sum n^2 -> n
+			int currSum = 0;
+			for (int i = 0; i < R; i++) {
+				currSum += sum[i];
+				maxSum = max(maxSum, currSum);
+
+				if (currSum < 0) {
+					currSum = 0;
+				}
+			}
 		}
-
-		while (!s.empty()) {
-			int top = A[s.top()][j];
-			s.pop();
-			int len = s.empty() ? n : n - s.top() + 1;
-
-			if (len == top)
-				maxArea = max(maxArea, top * len);
-		}
-
-
 	}
 
-	return maxArea;
+	return  maxSum;
 }
 
 
 int main() {
-	vector<vector<int> > v({
-		{0, 0, 1, 0, 0, 0, 0, 0},
-		{1, 1, 1, 1, 1, 1, 1, 0}
+	vector<vector<int> > M({
+		{ -1, -2}, { -3, -4}
 
 	});
-	cout << solve(v);
+
+	cout << maximumSumRectangle(2, 2, M);
 }
