@@ -2,36 +2,30 @@
 
 using namespace std;
 
-int maximumSumRectangle(int R, int C, vector<vector<int>> M) {
-	vector<int> sum(R, 0);
-	int maxSum = INT_MIN;
-	for (int left = 0; left < C ; left++) {
-		fill_n(sum.begin(), R, 0);
-		for (int right = left; right < C; right++) {
-			//Removed liability of Top and Bottom n^4 -> n^2
+unordered_map<string, int> mp;
 
-			//Store sum of each row in a sum array
-			for (int row = 0; row < R; row++) {
-				sum[row] += M[row][right];
-			}
+bool partition(string A, int i, int j) {
+	if (i == A.size())
+		return true;
 
-			//Apply kadanes on this row sum vertically
-			//sum n^2 -> n
-			int currSum = 0;
-			for (int i = 0; i < R; i++) {
-				currSum += sum[i];
-				maxSum = max(maxSum, currSum);
-
-				if (currSum < 0) {
-					currSum = 0;
-				}
-			}
+	for (int k = i; k < A.size(); k++) {
+		if (mp.find(A.substr(i, k - i + 1)) != mp.end() && partition(A, k + 1, j)) {
+			return true;
 		}
 	}
 
-	return  maxSum;
+	return false;
+
 }
 
+int Solution::wordBreak(string A, vector<string> &B) {
+	mp.clear();
+
+	for (string b : B)
+		mp[b]++;
+
+	return partition(A, 0, A.size() - 1);
+}
 
 int main() {
 	vector<vector<int> > M({

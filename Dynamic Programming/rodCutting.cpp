@@ -45,6 +45,7 @@ vector<int> Solution::rodCut(int n, vector<int> &cuts) {
 
 
 //or
+
 void getAns(int i, int j, vector<vector<int> > &dp, vector<int> &ans, vector<int> &cuts) {
 	if (j - i <= 1)
 		return ;
@@ -63,9 +64,6 @@ vector<int> Solution::rodCut(int n, vector<int> &cuts) {
 	cuts.push_back(0), cuts.push_back(n);
 	sort(cuts.begin(), cuts.end());
 	vector<vector<int> > dp(cuts.size() + 1, vector<int> (cuts.size() + 1, 0));
-
-
-
 
 	int N = cuts.size();
 

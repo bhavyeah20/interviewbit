@@ -41,8 +41,6 @@ int minimumCuts(string s, int i , int j, int **dp) {
 int minCut(string s) {
     int n = s.size();
 
-
-
     int **dp = new int*[n];
     for (int i = 0; i < n; i++)
         dp[i] = new int[n];
