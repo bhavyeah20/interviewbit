@@ -2,36 +2,56 @@
 
 using namespace std;
 
-unordered_map<string, int> mp;
+int calc(string A, int i, int j) {
+	int w = 0, b = 0;
 
-bool partition(string A, int i, int j) {
-	if (i == A.size())
-		return true;
-
-	for (int k = i; k < A.size(); k++) {
-		if (mp.find(A.substr(i, k - i + 1)) != mp.end() && partition(A, k + 1, j)) {
-			return true;
-		}
+	for (int idx = i; idx <= j; idx++) {
+		if (A[idx] == 'B')
+			b++;
+		else
+			w++;
 	}
 
-	return false;
-
+	return b * w;
 }
 
-int Solution::wordBreak(string A, vector<string> &B) {
-	mp.clear();
+int cost(string A, int i, int j, int cuts, vector<vector<int> > &dp) {
+	if (cuts == 0)
+		return dp[cuts][i] = calc(A, i, j);
 
-	for (string b : B)
-		mp[b]++;
+	if (dp[cuts][i] != -1)
+		return dp[cuts][i];
 
-	return partition(A, 0, A.size() - 1);
+	int ans = 10000000;
+	for (int k = i; k < j; k++) {
+		int curr = calc(A, i, k) + cost(A, k + 1, j, cuts - 1, dp);
+
+		ans = min(curr, ans);
+	}
+
+	return dp[cuts][i] = ans;
 }
+
+int arrange(string A, int B) {
+	if (!B)
+		return -1;
+
+	if (A.size() < B)
+		return -1;
+	vector<vector<int> > dp(B, vector<int> (A.size(), -1));
+	int a =  cost(A, 0, A.size() - 1, B - 1, dp);
+	// for (auto it : dp) {
+	// 	for (auto x : it) {
+	// 		cout << setw(10) << x << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	return a;
+}
+
 
 int main() {
-	vector<vector<int> > M({
-		{ -1, -2}, { -3, -4}
-
-	});
-
-	cout << maximumSumRectangle(2, 2, M);
+	string A = "BWWWWBBWWBWBWWBBBBBWBWWBBBWWWWBBBW";
+	int B = 28;
+	cout << arrange(A, B);
 }
