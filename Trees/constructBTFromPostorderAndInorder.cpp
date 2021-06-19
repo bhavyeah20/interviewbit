@@ -51,7 +51,7 @@ public:
 class Solution {
 public:
     
-            unordered_map<int,int> mp;
+    unordered_map<int,int> mp;
     TreeNode* build(int start, int end,vector<int>& postorder, vector<int>& inorder,int &idx){
         if(start > end)
             return NULL;
