@@ -62,6 +62,14 @@ TreeNode *inorderSuccesor(TreeNode *root){
 
 	return root;
 }
+
+TreeNode *inorderPredecessor(TreeNode *root){
+	root = root->left;
+	while(root && root->right)
+		root = root->right;
+	return root;
+}
+
 TreeNode* removed(TreeNode *root, int key){
 
 	if(!root){

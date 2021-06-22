@@ -95,19 +95,19 @@ TreeNode *inorderSuccesor(TreeNode *root){
 
     return root;
 }
-TreeNode* removed(TreeNode *root, int key){
+TreeNode* Delete(TreeNode *root, int key){
 
     if(!root){
         return root;
     }
 
     if(root->val < key){
-        root->right = removed(root->right,key);
+        root->right = Delete(root->right,key);
         return root;
     }
 
     else if(root->val > key){
-        root->left = removed(root->left, key);
+        root->left = Delete(root->left, key);
         return root;
 
     }
@@ -137,7 +137,10 @@ TreeNode* removed(TreeNode *root, int key){
 
     TreeNode *nextPtr = inorderSuccesor(root);
     root->val = nextPtr->val;
-    root->right = removed(root->right,nextPtr->val);
+    root->right = Delete(root->right,nextPtr->val);
     return root;
 
 }
+
+//or
+//Always delete Inorder Succesor/ Predecessor
