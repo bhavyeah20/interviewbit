@@ -7,33 +7,24 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-TreeNode* Solution::buildTree(vector<int> &A) {
-    priority_queue<int> pq;
-    unordered_map<int,int> mp; //ele->idx
-    for(int i = 0; i < A.size(); i++){
-        pq.push(A[i]);
-        mp[A[i]] = i;
-    }
-    TreeNode *root = NULL, *prev = NULL;
-    int prevIdx = -1;
-    while(!pq.empty()){
-        int x = pq.top();
-        pq.pop();
-        int idx = mp[x];
-        TreeNode *t = new TreeNode(x);
-        
-        if(prevIdx == -1){
-            root = t;
-            prevIdx = idx;
-        }
-        else if(idx > prevIdx){
-            prev->right = t;
-        }
-        else
-            prev->left = t;
-            
-        prev = t;
-    }
+
+int findMax(int start, int end, vector<int> &A){
+    return max_element(A.begin()+start,A.begin()+end+1) - A.begin();
+}
+TreeNode *build(int start, int end, vector<int> &A){
+
+    if(start > end)
+        return NULL;
+
+    int idx = findMax(start,end,A);
+    TreeNode *root = new TreeNode(A[idx]);
+
+    root->left = build(start,idx-1,A);
+    root->right = build(idx+1,end,A);
     
     return root;
+}
+
+TreeNode* Solution::buildTree(vector<int> &A) {
+    return build(0,A.size()-1,A);
 }

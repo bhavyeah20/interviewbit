@@ -117,21 +117,47 @@ TreeNode* removed(TreeNode *root, int key){
 
 }
 
+void morrisTraversal(TreeNode *root){
+
+    while(root){
+        if(root->left){
+            TreeNode *temp = root->left;
+            while(temp->right && temp->right != root){
+                temp = temp->right;
+            }
+            if(temp->right){
+                temp->right = NULL;
+                root = root->right;
+            }
+            else{
+        		cout<<root->val<<" ";
+                temp->right = root;
+                root = root->left;
+            }
+        }
+
+        else{
+        cout<<root->val<<" ";
+        root = root->right;
+    	}
+    }
+}
+
 int main() {
 	// ios_base::sync_with_stdio(false);
 	// cin.tie(NULL);
 
 	TreeNode *root = NULL;
-	root = insert(root,11);
-	root = insert(root,14);
+	root = insert(root,50);
+	root = insert(root,40);
+	root = insert(root,60);
 	root = insert(root,10);
-	root = insert(root,4);
-	root = insert(root,12);
-	root = insert(root,434);
-	inorder(root);
+	root = insert(root,45);
+	root = insert(root,55);
+	morrisTraversal(root);
 	cout<<endl;
-	root = removed(root,434);
-	inorder(root);
-	cout<<endl;
+	// root = removed(root,434);
+	// inorder(root);
+	// cout<<endl;
 	
 }
