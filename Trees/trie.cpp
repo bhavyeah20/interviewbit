@@ -6,6 +6,7 @@ using namespace std;
 #define endl "\n"
 
 struct TrieNode {
+	//TrieNode* child[alphabetSize] can also be implemented
 	unordered_map<char,TrieNode *> child;
 	bool endOfWord;
 
@@ -79,16 +80,14 @@ int main() {
 	// cin.tie(NULL);
 
 	TrieNode *root = new TrieNode();
-	root = insert(root,"zebra");
-	root = insert(root,"duck");
-	root = insert(root,"dot");
-	root = insert(root,"dog");
-	// root = insert(root,"lmn");
+	root = insert(root,"abc");
+	root = insert(root,"abcd");
+	root = insert(root,"abgl");
+	root = insert(root,"cdf");
+	root = insert(root,"lmn");
 
-	cout<<search(root,"zebra")<<endl;
-	// root = Delete(root,"the");
-	cout<<search(root,"duck")<<endl;
-	cout<<search(root,"dot")<<endl;
-	cout<<search(root,"dog")<<endl;
+	cout<<search(root,"abgl")<<endl;
+	root = Delete(root,"abc");
+	cout<<search(root,"abgl")<<endl;
 
 }
