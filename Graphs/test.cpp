@@ -5,80 +5,48 @@ using namespace std;
 #define ll long long
 #define endl "\n"
 
-void printDFS(int **edges, int n, int startingVertex, bool *visited){
-
-	cout<<startingVertex<<" ";
-	visited[startingVertex] = 1;
-
-	for(int i = 0; i < n; i++){
-		if(i == startingVertex)
-			continue;
-
-		if(edges[startingVertex][i] && !visited[i]){
-			printDFS(edges,n,i,visited);
-		}
-	}
-}
-
-
-void printBFS(int **edges, int n, int startingVertex, bool *visited){
-
+void SSSP(int startingVertex, int N, unordered_map<int,vector<int>> &adjList){
+	vector<int> distance(N,-1);
 	queue<int> q;
 	q.push(startingVertex);
-	visited[startingVertex] = 1;
+	distance[startingVertex] = 0;
+
 	while(!q.empty()){
 		int vtx = q.front();
 		q.pop();
-		cout<<vtx<<" ";
 
-		for(int i = 0; i < n; i++){
-			if(i == vtx) continue;
-
-			if(edges[vtx][i] && !visited[i]){
-				visited[i] = 1;
-				q.push(i);
+		for(auto child: adjList[vtx]){
+			if(distance[child] == -1){
+				q.push(child);
+				distance[child] = distance[vtx] + 1;
 			}
 		}
 	}
 
-}
+	for(int i = 0; i < N; i++)
+		cout<<"Distance of node "<<i<<"from "<<startingVertex<<" "<<distance[i]<<endl;
 
+}
 int main(){
-	int n,e;
+
+	int N;
 	cout<<"Enter number of vertices "<<endl;
-	cin >> n;
+	cin >> N;
+
+	unordered_map<int,vector<int> > adjList;
 	cout<<"Enter number of edges "<<endl;
+	int e;
 	cin >> e;
 
 	cout<<"Enter edges "<<endl;
-	int **edges = new int*[n];
-	for(int i = 0; i < n; i++){
-		edges[i] = new int[n];
-		for(int j = 0; j < n; j++)
-			edges[i][j] = 0;
-	}
-
+	
 	for(int i = 0; i < e; i++){
 		int f, s;
 		cin >> f >> s;
-		edges[f][s] = edges[s][f] = 1;
+		adjList[f].push_back(s);
 	}
 
-	bool *visited = new bool[n];
-	for(int i = 0; i < n; i++)
-		visited[i] = 0;
-
-	for(int i = 0; i < n; i++){
-		if(!visited[i])
-			printDFS(edges,n,i,visited);
-	}
-	for(int i = 0; i < n; i++)
-		visited[i] = 0;
-	cout<<endl;
-	for(int i = 0; i < n; i++){
-		if(!visited[i])
-			printBFS(edges,n,i,visited);
-	}
+	SSSP(0,N,adjList);
 
 }
 

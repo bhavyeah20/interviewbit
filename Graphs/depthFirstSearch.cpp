@@ -20,6 +20,25 @@ void printDFS(int **edges, int n, int startingVertex, bool *visited){
 	}
 }
 
+void printDFS(int **edges, int n, int sv, bool *visited){
+
+	stack<int> s;
+	s.push(sv);
+	visited[sv] = 1;
+	while(!s.empty()){
+		sv = s.top();
+		s.pop();
+		cout<<sv<<" ";
+		for(int i = 0; i < n; i++){
+			if(!visited[i] && edges[sv][i]){
+				visited[i] = 1;
+				s.push(i);
+			}
+		}
+	}
+
+}
+
 int main(){
 	int n,e;
 	cout<<"Enter number of vertices "<<endl;
