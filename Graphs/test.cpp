@@ -2,51 +2,45 @@
 
 using namespace std;
 
-#define ll long long
-#define endl "\n"
-
-void SSSP(int startingVertex, int N, unordered_map<int,vector<int>> &adjList){
-	vector<int> distance(N,-1);
-	queue<int> q;
-	q.push(startingVertex);
-	distance[startingVertex] = 0;
-
-	while(!q.empty()){
-		int vtx = q.front();
-		q.pop();
-
-		for(auto child: adjList[vtx]){
-			if(distance[child] == -1){
-				q.push(child);
-				distance[child] = distance[vtx] + 1;
-			}
-		}
-	}
-
-	for(int i = 0; i < N; i++)
-		cout<<"Distance of node "<<i<<"from "<<startingVertex<<" "<<distance[i]<<endl;
-
+bool dfsHelper(int node, vector<bool> &visited, int parent, unordered_map<int, vector<int>> &adjList){
+    visited[node] = 1;
+    
+        
+    for(int child: adjList[node]){
+        if(visited[child] && parent!= child)
+            return 1;
+            
+        else if(!visited[child]){
+            parent = node;
+            if(dfsHelper(child, visited, parent, adjList))
+                return 1;
+        }
+        
+    }
+    
+    return 0;
 }
+
+int solve(int A, vector<vector<int> > &B) {
+    unordered_map<int, vector<int> > adjList;
+    for(int i = 0; i < B.size(); i++){
+        adjList[B[i][0]].push_back(B[i][1]);
+        adjList[B[i][1]].push_back(B[i][0]);   
+    }
+    
+    vector<bool> visited(A+1,0);
+    
+    for(int i = 1; i <= A; i++){
+        if(!visited[i]){
+            if(dfsHelper(i,visited,-1,adjList))
+                return 1;
+        }
+    }
+    
+    return 0;
+}
+
 int main(){
-
-	int N;
-	cout<<"Enter number of vertices "<<endl;
-	cin >> N;
-
-	unordered_map<int,vector<int> > adjList;
-	cout<<"Enter number of edges "<<endl;
-	int e;
-	cin >> e;
-
-	cout<<"Enter edges "<<endl;
-	
-	for(int i = 0; i < e; i++){
-		int f, s;
-		cin >> f >> s;
-		adjList[f].push_back(s);
-	}
-
-	SSSP(0,N,adjList);
-
+	vector<vector<int> > B({{1,3},{1,2},{4,5}});
+	cout<<solve(5,B);
 }
-
