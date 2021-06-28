@@ -64,8 +64,7 @@ public:
 			}
 
 			else if(!visited[child]){
-				parent = src;
-				if(dfsHelper(child,parent,visited))
+				if(dfsHelper(child,src,visited))
 					return true;
 			}
 		}
