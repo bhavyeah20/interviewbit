@@ -78,3 +78,11 @@ ll journeyToMoon(int n, vector<vector<int>> astronaut) {
     g.addEdges(n, astronaut);
     return g.dfs(n);
 }
+
+
+//or by DSU
+
+for(i = 0; i < V; i++)
+    ans += V - rank[parent[i]];
+
+return ans/2;
