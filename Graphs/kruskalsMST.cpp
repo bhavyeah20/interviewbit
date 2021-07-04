@@ -6,7 +6,6 @@ class DSU{
     int V;
     int *parent;
     int *rank;
-
 public:
     DSU(int V){
         this->V = V;
