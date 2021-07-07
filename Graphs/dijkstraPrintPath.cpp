@@ -24,10 +24,12 @@ public:
 	void dijkstra(){
 		int *parent = new int[V];
 		int *dist = new int[V];
+		bool *vis = new bool[V];
 
 		for(int i = 0; i < V; i++){
 			dist[i] = INT_MAX;
 			parent[i] = -1;
+			vis[i] = 0;		
 		}
 
 		priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
@@ -35,24 +37,20 @@ public:
 		pq.push({0,0});	
 		parent[0] = -1;
 		dist[0] = 0;
-		
 		while(!pq.empty()){
 			int distToCurr = pq.top().first, node = pq.top().second;
 			pq.pop();
+			vis[node] = 1;
 
 			for(auto nbrPair: mp[node]){
-			
 				int wtEdge = nbrPair.first, nbr = nbrPair.second;
-				if(dist[nbr] > distToCurr + wtEdge){
+				if(!vis[nbr] && dist[nbr] > distToCurr + wtEdge){
 					dist[nbr] = distToCurr + wtEdge;
 					pq.push({dist[nbr],nbr});
 					parent[nbr] = node;
 				}
 			}
-
-
 		}
-
 
 
 		if(dist[V-1] == INT_MAX){

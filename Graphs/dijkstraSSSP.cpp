@@ -20,6 +20,8 @@ public:
     void dijkstra(){
         vector<int> distance(V,INT_MAX);
 
+        // priority_queue<pair<int,int>, vector<pair<int,int>, greater<pair<int,int>> pq; pq gives min in O(1) and is in general faster than set
+        // With pq multiple copies of vertices are inserted if distances are updated as final result of distance[] would be same
         set<pair<int,int>> s; //distance,node
         s.insert({0,0});
         distance[0] = 0;
