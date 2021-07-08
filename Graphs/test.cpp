@@ -1,95 +1,53 @@
 #include<bits/stdc++.h>
 
+
 using namespace std;
 
-#define endl "/n"
-#define ll long long
 
-class Graph{
-	int V;
-	unordered_map<int,vector<pair<int,int>>> mp; 
-	// wt,node
-
+class Solution {
 public:
-	Graph(int V){
-		this->V = V;
-		mp.clear();
-	}
-
-	void addEdge(int x, int y, int w){
-		mp[x].push_back({w,y});
-		mp[y].push_back({w,x});
-	}
-
-	void dijkstra(){
-		int *parent = new int[V];
-		int *dist = new int[V];
-
-		for(int i = 0; i < V; i++){
-			dist[i] = INT_MAX;
-			parent[i] = -1;
-		}
-
-		priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-		//dist,node
-		pq.push({0,0});	
-		parent[0] = -1;
-		dist[0] = 0;
-		
-		while(!pq.empty()){
-			int distToCurr = pq.top().first, node = pq.top().second;
-			pq.pop();
-
-			for(auto nbrPair: mp[node]){
-			
-				int wtEdge = nbrPair.first, nbr = nbrPair.second;
-				if(dist[nbr] > distToCurr + wtEdge){
-					dist[nbr] = distToCurr + wtEdge;
-					pq.push({dist[nbr],nbr});
-					parent[nbr] = node;
-				}
-			}
-
-
-		}
-
-
-
-		if(dist[V-1] == INT_MAX){
-			cout<<-1;
-		}
-
-		else{
-			int vtx = V-1;
-			list<int> ans;
-
-			while(vtx != -1){
-				ans.push_front(vtx);
-				vtx = parent[vtx];
-			}
-
-			for(auto it: ans){
-				cout<<it+1<<" ";
-			}
-		}
-	}
-};
-
-int main(){
-  	ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-
-    int n, m;
-    cin >> n >> m;
-
-    Graph g(n);
-    while(m--){
-    	int x, y, w;
-    	cin >> x >> y >> w;
-    	g.addEdge(x-1,y-1,w);
+    int ladderLength(string start, string end, vector<string>& wordList) {
+        
+        queue<string> q;
+        q.push(start);
+        int wordsize=start.size();
+        
+        unordered_set<string> word;
+        for(int i=0;i<wordList.size();i++){
+            word.insert(wordList[i]);
+        }
+        
+        if(word.find(end)==word.end()) return 0;
+        
+        int len=0;
+        while(!q.empty()){
+            len++;
+            int qlen=q.size();
+            for(int i=0;i<qlen;i++){
+                string s=q.front();
+                q.pop();
+                for(int j=0;j<wordsize;j++){
+                    char original=s[j];
+                    for(char ch='a';ch<='z';ch++){
+                        s[j]=ch;
+                        if(s==end) return len+1;
+                        if(word.find(s)==word.end()) continue;
+                        
+                        word.erase(s);
+                        q.push(s);
+                    }
+                    s[j]=original;
+                }
+            }
+        }
+        return 0;
+        
+        
     }
+};
+int main(){
 
-    g.dijkstra();
-
+  vector<string> v({"hot","dot","lot","log"});
+  cout<<solve("hit","cog",v);
 }
+
