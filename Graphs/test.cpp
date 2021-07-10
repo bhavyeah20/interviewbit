@@ -4,50 +4,103 @@
 using namespace std;
 
 
-class Solution {
-public:
-    int ladderLength(string start, string end, vector<string>& wordList) {
-        
-        queue<string> q;
-        q.push(start);
-        int wordsize=start.size();
-        
-        unordered_set<string> word;
-        for(int i=0;i<wordList.size();i++){
-            word.insert(wordList[i]);
+    void addParents(string s, unordered_map<string, vector<string>> &parent, vector<string> &curr,vector<vector<string>> &ans, string A){
+        curr.push_back(s);
+
+        if(s == A){
+            vector<string> rev(curr.rbegin(),curr.rend());
+            ans.push_back(rev);
+            rev.clear();
+            curr.pop_back();
+            return ;
         }
-        
-        if(word.find(end)==word.end()) return 0;
-        
-        int len=0;
-        while(!q.empty()){
-            len++;
-            int qlen=q.size();
-            for(int i=0;i<qlen;i++){
-                string s=q.front();
-                q.pop();
-                for(int j=0;j<wordsize;j++){
-                    char original=s[j];
-                    for(char ch='a';ch<='z';ch++){
-                        s[j]=ch;
-                        if(s==end) return len+1;
-                        if(word.find(s)==word.end()) continue;
-                        
-                        word.erase(s);
-                        q.push(s);
+
+        for(auto p: parent[s]){
+            addParents(p,parent,curr,ans,A);
+        }
+
+        curr.pop_back();
+
+    }
+
+    void findLadders(string A, string B, vector<string>& C) {
+        queue<string> q;
+        unordered_set<string> dict;
+        unordered_set<string> rem;
+        vector<vector<string>> ans;
+        vector<string> curr;
+        unordered_map<string,vector<string>> parent;
+        bool stop = 0;
+
+        for(auto s: C)
+            dict.insert(s);
+
+        q.push(A);
+
+        if(!dict.count(B))
+            return ;
+
+        if(dict.count(A))
+            dict.erase(A);
+
+        while(!q.empty() && !stop){
+            int sz = q.size();
+            rem.clear();
+            for(int k = 0; k < sz; k++){
+
+                string s = q.front();
+
+                for(int i = 0; i < s.length(); i++){
+                    char org = s[i];
+                    for(char x = 'a'; x <= 'z'; x++){
+                        if(x == org)
+                            continue;
+
+                        s[i] = x;
+
+                        if(dict.count(s)){
+                            if(s == B) stop = 1;
+                            if(!rem.count(s))
+                                q.push(s);
+                            rem.insert(s);
+                            parent[s].push_back(q.front());
+                         }
                     }
-                    s[j]=original;
+              
+                    s[i] = org;
                 }
+                q.pop();
+
+            }
+
+
+            for(auto it: rem){
+                dict.erase(it);
             }
         }
-        return 0;
+
+
+        addParents(B,parent,curr,ans,A);
+
+        for(auto it: parent){
+            cout<<"string "<<it.first<<"has parents ";
+            for(auto ele: it.second)
+                cout<<ele<<" ";
+            cout<<endl;
+        }
+
+        // return ans;
+
         
-        
+     
+
+
+    
     }
-};
+
 int main(){
 
-  vector<string> v({"hot","dot","lot","log"});
-  cout<<solve("hit","cog",v);
+  vector<string> v({"ted","tex","red","tax","tad","den","rex","pee"});
+findLadders("red","tax",v);
 }
 

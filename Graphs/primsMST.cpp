@@ -1,3 +1,6 @@
+//O(ElogV) pq
+//O(E + VlogV) fib-heap
+
 #include<bits/stdc++.h>
 
 using namespace std;
@@ -33,7 +36,8 @@ public:
                 continue;
 
             cost += wt;
-
+            vis[to] = 1;
+            
             for(auto nbr: adjList[to]){
                 if(!vis[nbr.second]){
                     pq.push(nbr);
