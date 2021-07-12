@@ -24,11 +24,11 @@ int knapSackMemoized(vector<int> wt, vector<int> val, int W, int n) {
 
 	if (dp[n][W] == -1) {
 		if (wt[n - 1] <= W) {
-			dp[n][W] =  max(val[n - 1] + knapSack(wt, val, W - wt[n - 1], n - 1),
+			dp[n][W] =  max(val[n - 1] + knapSackMemoized(wt, val, W - wt[n - 1], n - 1),
 			                knapSack(wt, val, W, n - 1));
 		}
 		else
-			dp[n][W] =  knapSack(wt, val, W, n - 1);
+			dp[n][W] =  knapSackMemoized(wt, val, W, n - 1);
 	}
 	return dp[n][W];
 }

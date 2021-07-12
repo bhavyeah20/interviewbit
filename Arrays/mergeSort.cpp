@@ -1,29 +1,28 @@
-#include<bits/stdc++.h>
-
-using namespace std;
-
+class Solution {
+public:
     //mergesort O(nlogn)
-    vector<int> sortt(int start, int end, vector<int> &A){
+    vector<int> sortt(vector<int> &A){
         
-        if(start >= end)
+        if(A.size() == 1)
             return A;
         
-        int mid = start + (end - start) / 2;
+        int mid = (A.size() - 1) / 2;
         
         vector<int> left;
         vector<int> right;
         
-        for(int i = 0; i < mid; i++){
+        for(int i = 0; i <= mid; i++){
             left.push_back(A[i]);
             right.push_back(A[A.size()-i-1]);
         }
         
-        left.push_back(A[mid]);
+        if(A.size() & 1)
+            right.pop_back();
         
-        left = sortt(start,mid,left);
-        right = sortt(mid+1,end,right);
+        left = sortt(left);
+        right = sortt(right);
         
-        for(int i = 0, j = 0, k = 0; i < left.size() || j < right.size();){
+        for(int i = 0, j = 0, k = 0; i < left.size() || j < right.size();k++){
             
             int l = 1e9, r = 1e9;
             
@@ -42,7 +41,7 @@ using namespace std;
                 A[k] = right[j];
                 j++;
             }
-            k++;
+            
         }
         
         left.clear();
@@ -62,12 +61,8 @@ using namespace std;
         
         if(i == A.size() - 1) return A;
         
-        A = sortt(0,A.size()-1,A);
+        A = sortt(A);
         
         return A;
     }
-int main(){
-    vector<int> v({5,1,1,2,0,3});
-    v = sortArray(v);
-    for(auto it: v) cout<<it<<" ";
-}
+};
