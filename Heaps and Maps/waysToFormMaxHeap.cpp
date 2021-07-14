@@ -1,7 +1,3 @@
-#include<bits/stdc++.h>
-
-using namespace std;
-
 #define ll long long int
 
 ll mod = 1e9+7;
@@ -66,18 +62,4 @@ long long ways(int N){
 int Solution::solve(int A) {
  	long long x = ways(A) % mod;
     return x;
-}
-
-
-int main(){
-
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-
-	long long x;
-	cin >> x;
-	cout<<solve(x);
-
-
 }
