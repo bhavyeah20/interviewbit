@@ -5,90 +5,54 @@ using namespace std;
 #define ll long long
 #define endl "\n"
 
-struct TrieNode {
-	unordered_map<char,TrieNode *> child;
-	bool endOfWord;
+int arr[100005], segmentTree[4*100005];
 
-	TrieNode(){
-		child.clear();
-		endOfWord = false;
-	}
-};
-
-TrieNode *insert(TrieNode *head, string s){
-	if(!head)
-		head = new TrieNode();
-
-	TrieNode *root = head;
-	int n = s.length();
-	for(int i = 0; i < n; i++){
-		if(root->child.find(s[i]) == root->child.end()){
-			TrieNode *temp = new TrieNode();
-			root->child[s[i]] = temp;
-		}
-		root = root->child[s[i]];
+void buildSegmentTree(int idx, int left, int right){
+	if(left == right){
+		segmentTree[idx] = arr[left];
+		return ;
 	}
 
-	root->endOfWord = true;
-	return head;
+	int mid = left + (right-left)/2;
+	buildSegmentTree(2*idx+1,left,mid);
+	buildSegmentTree(2*idx+2,mid+1,right);
+
+	segmentTree[idx] = max(segmentTree[2*idx+1], segmentTree[2*idx+2]); //replace with + for sum
 }
 
-bool search(TrieNode *root, string s){
-	int n = s.length();
-	for(int i = 0; i < n; i++){
-		if(!root)
-			return false;
+int query(int idx, int left, int right, int queryLeft, int queryRight){
+	if(queryLeft <= left && queryRight >= right)
+		return segmentTree[idx];
 
-		if(root->child.find(s[i]) == root->child.end())
-			return false;
+	if(queryLeft > right || queryRight < left)
+		return INT_MIN;
 
-		root = root->child[s[i]];
-	}
+	int mid = left + (right-left)/2;
+	int leftMax = query(2*idx+1, left, mid, queryLeft, queryRight);
+	int rightMax = query(2*idx+2, mid+1, right, queryLeft, queryRight);
 
-	return root->endOfWord;
+	return max(leftMax, rightMax); // replace with + for sum
+
 }
-
-TrieNode *Delete(TrieNode *root, string s, int depth = 0){
-	if(!root)
-		return root;
-
-	if(depth == s.length()){
-		root->endOfWord = false;
-
-		if(root->child.empty()){
-			delete root;
-			root = NULL;
-		}
-
-		return root;
-
-	}
-
-	root->child[s[depth]] = Delete(root->child[s[depth]],s,depth+1);
-	if(root->child[s[depth]] == NULL && root->child.size() == 1 && root->endOfWord == false){
-		delete root;
-		root = NULL;
-	}
-
-	return root;
-}
-
 
 int main() {
-	// ios_base::sync_with_stdio(false);
-	// cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 
-	TrieNode *root = new TrieNode();
-	root = insert(root,"zebra");
-	root = insert(root,"duck");
-	root = insert(root,"dot");
-	root = insert(root,"dog");
-	// root = insert(root,"lmn");
+	int n, q;
+	cin >> n >> q;
+	for(int i = 0; i < n; i++){
+		cin >> arr[i];
+	}
 
-	cout<<search(root,"zebra")<<endl;
-	// root = Delete(root,"the");
-	cout<<search(root,"duck")<<endl;
-	cout<<search(root,"dot")<<endl;
-	cout<<search(root,"dog")<<endl;
+	buildSegmentTree(0,0,n-1);
+
+	while(q--){
+		int l, r;
+		cin >> l >> r;
+
+		cout<<query(0,0,n-1,l,r)<<endl;
+
+	}
 
 }
