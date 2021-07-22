@@ -35,6 +35,7 @@ void query(int idx, int left, int right, int pos, int h){
     if(segmentTree[2*idx+1] >= pos)
         query(2*idx+1,left,mid,pos,h);
     //else right tree will accomodate
+    //new pos will be pos-seg[left]
     else
         query(2*idx+2,mid+1,right,pos-segmentTree[2*idx+1],h);
 
