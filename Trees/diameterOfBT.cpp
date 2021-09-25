@@ -1,6 +1,14 @@
-diameter(){
-	lDia = diameter(root->left);
-	rDia = diameter(root->right);
+int diameter(Node *root, int &res){
 
-	return max({lDia, rDia, 1 + height(left) + height(right)})
+	if(!root) return 0;
+
+	lDia = diameter(root->left, res);
+	rDia = diameter(root->right, res);
+
+	int temp = 1 + max(lDia, rDia);
+	int ans = max(temp, lDia + rDia + 1);
+
+	res = max(res, ans);
+
+	return temp;
 }
